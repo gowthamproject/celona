@@ -22,11 +22,12 @@ public class GNBService extends CelonaService {
 
 		Certificate.doTrustToCertificates();
 		String responseJson = super.pullData(Constants.GNB_URL);
-		JSONParser parser = new JSONParser();
-		JSONObject json = (JSONObject) parser.parse(responseJson);
-		JSONArray data = (JSONArray) json.get("data");
-		//System.out.println("GNB RESPONSE ----: " + data.toString());
+	
 		if (responseJson != null && !responseJson.isEmpty()) {
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(responseJson);
+			JSONArray data = (JSONArray) json.get("data");
+			//System.out.println("GNB RESPONSE ----: " + data.toString());
 			List<GNB> gnbList = (List<GNB>) Util.parseJsonStrToObject(data.toString(), Constants.GNB);
 			setGNB_LIST(gnbList);
 			new GNBDAO().pollRecords(GNB_LIST);

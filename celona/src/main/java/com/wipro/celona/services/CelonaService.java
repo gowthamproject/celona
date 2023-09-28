@@ -10,11 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public abstract class CelonaService {
-	
-	private static final String API_KEY ="$2a$04$lF2nq9LmksX64yu8QRtgsex1hdqMgvYeBSc429PwogV3Jqb.X2LZS";
+
+	private static final String API_KEY = "$2a$04$lF2nq9LmksX64yu8QRtgsex1hdqMgvYeBSc429PwogV3Jqb.X2LZS";
 
 	protected String pullData(final String url) throws IOException {
-		
+
 		URL weburl = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection) weburl.openConnection();
 		conn.setDoOutput(true);
@@ -31,7 +31,7 @@ public abstract class CelonaService {
 		return sb.toString();
 	}
 
-	protected String pullData(final String url, Map<String, Object> params) throws IOException {
+	protected String pullData_POST(final String url, Map<String, Object> params) throws IOException {
 		URL weburl = new URL(url);
 		StringBuilder postData = new StringBuilder();
 		for (Map.Entry<String, Object> param : params.entrySet()) {
@@ -46,7 +46,7 @@ public abstract class CelonaService {
 
 		HttpURLConnection conn = (HttpURLConnection) weburl.openConnection();
 		conn.setDoOutput(true);
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Accept", "application/json");
 		conn.setRequestProperty("x-api-key", API_KEY);
 		conn.getOutputStream().write(postDataBytes);
@@ -59,4 +59,30 @@ public abstract class CelonaService {
 		}
 		return sb.toString();
 	}
+
+	protected String pullData_GET(final String url, Map<String, Object> params) throws IOException {
+		StringBuilder data = new StringBuilder();
+		for (Map.Entry<String, Object> param : params.entrySet()) {
+			if (data.length() != 0)
+				data.append('&');
+			data.append(URLEncoder.encode(param.getKey(), String.valueOf(StandardCharsets.UTF_8)));
+			data.append('=');
+			data.append(URLEncoder.encode(String.valueOf(param.getValue()), String.valueOf(StandardCharsets.UTF_8)));
+		}
+		URL weburl = new URL(url + "?" + data);
+		HttpURLConnection conn = (HttpURLConnection) weburl.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("x-api-key", API_KEY);
+		// System.out.println("Output is: " + conn.getResponseCode());
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		StringBuilder sb = new StringBuilder();
+		String output;
+		while ((output = br.readLine()) != null) {
+			sb.append(output);
+		}
+		return sb.toString();
+	}
+
 }

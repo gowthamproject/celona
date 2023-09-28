@@ -18,14 +18,17 @@ public class SubscriberService extends CelonaService {
 	public void pull_SubsriberDetailsFromRaemisAPI() throws Exception {
 		Certificate.doTrustToCertificates();
 		String responseJson = super.pullData(Constants.SUBSCRIBER_URL);
-		JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseJson);
-        JSONArray data = (JSONArray) json.get("data");
-		//System.out.println("SUBSCRIBER RESPONSE ----: " + data.toString());
-		if (responseJson != null && !responseJson.isEmpty())
-			new SubscriberDAO().pollRecords((List<Subscriber>) Util.parseJsonStrToObject(data.toString(), Constants.SUBSCRIBER));
+
+		if (responseJson != null && !responseJson.isEmpty()) {
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(responseJson);
+			JSONArray data = (JSONArray) json.get("data");
+			// System.out.println("SUBSCRIBER RESPONSE ----: " + data.toString());
+			new SubscriberDAO()
+					.pollRecords((List<Subscriber>) Util.parseJsonStrToObject(data.toString(), Constants.SUBSCRIBER));
+		}
 	}
-	
+
 	/*
 	 * public static void main(String[] args) { try { new
 	 * SubscriberService().pull_SubsriberDetailsFromRaemisAPI(); } catch (Exception

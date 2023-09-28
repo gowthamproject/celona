@@ -7,6 +7,7 @@ import com.wipro.celona.model.*;
 
 import java.io.StringReader;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,6 +31,10 @@ public class Util {
 			return Arrays.asList(new Gson().fromJson(reader, Site[].class));
 		case Constants.PDU_SESSION:
 			return Arrays.asList(new Gson().fromJson(reader, PDUSession[].class));
+		case Constants.CUSTOMER:
+			return Arrays.asList(new Gson().fromJson(reader, Customer[].class));
+		case Constants.THROUGHPUT:
+			return new Gson().fromJson(reader, MS_Throughput.class);
 		}
 		return null;
 	}
@@ -51,6 +56,11 @@ public class Util {
 
 	public static Iterator<LocalDateTime> datesBetween(LocalDateTime start, LocalDateTime end, int periodInMinutes) {
 		return new DatesBetweenIterator(start, end, periodInMinutes);
+	}
+
+	public static String changeDateFormat(long millis) {
+		Date date = new Date(millis);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(date);
 	}
 
 	private static class DatesBetweenIterator implements Iterator<LocalDateTime> {

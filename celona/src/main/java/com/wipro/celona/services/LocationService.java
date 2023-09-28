@@ -26,10 +26,10 @@ public class LocationService extends CelonaService {
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(responseJson);
 			JSONArray data = (JSONArray) json.get("data");
-			//System.out.println("LOCATION RESPONSE ----: " + data.toString());
+			// System.out.println("LOCATION RESPONSE ----: " + data.toString());
 			List<Site> sites = (List<Site>) Util.parseJsonStrToObject(data.toString(), Constants.SITE);
 			List<GNB> gNBs = GNBService.getGNB_LIST();
-			if(gNBs.isEmpty())
+			if (gNBs.isEmpty())
 				System.out.println("GNB RECORD NOT COMING.....................................");
 
 			new LocationDAO().pollRecords(getLocations(sites, gNBs));
@@ -54,7 +54,7 @@ public class LocationService extends CelonaService {
 		}
 		return locations;
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			new LocationService().pull_SitesDetailsFromRaemisAPI();
